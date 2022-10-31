@@ -1,6 +1,5 @@
 # import unittest
 from unittest.mock import patch, Mock
-import flask
 # import requests
 from collections import namedtuple
 
