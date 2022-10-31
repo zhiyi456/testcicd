@@ -70,6 +70,6 @@ jobs:
           python backend/test_unit.py
 
       - name: Test with integration
-        #runs the unittest
+        #runs the integration test
         run: |
           python backend/test_integration.py
