@@ -1,7 +1,7 @@
 # import unittest
-from unittest.mock import patch, Mock
+#from unittest.mock import patch, Mock
 # import requests
-from collections import namedtuple
+#from collections import namedtuple
 
 import unittest
 from flask import Flask,jsonify
