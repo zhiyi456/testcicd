@@ -55,7 +55,7 @@ def course_get_all():
 
 @app.route("/course/name/<string:course_name>", methods=['GET'])
 def course_get_by_name(course_name):
-    course_data = Course.query.filter_by(course_name = course_name).first()
+    course_data = Course.query.filter_by(Course_Name = course_name).first()
     if course_data:
         return jsonify(
             {
@@ -74,7 +74,7 @@ def course_get_by_name(course_name):
 
 @app.route("/course/id/<string:course_id>", methods=['GET'])
 def get_course_by_course_id(course_id):
-    course = Course.query.filter_by(course_id = course_id).first()
+    course = Course.query.filter_by(Course_ID = course_id).first()
     if course:
         return jsonify(
             {
@@ -87,7 +87,7 @@ def get_course_by_course_id(course_id):
     return jsonify(
         {
             "code": 404,
-            "message": str(course_id) + "id not found."
+            "message": str(course_id) + " id not found."
         }
     ), 404
 

@@ -281,6 +281,7 @@ class TestLearningJourney(TestApp):
         }
         ).data)
 
+
     def test_get_learning_journey_by_lj_id(self):
         db.session.add(LearningJourney(130001, 'Human Resource Manager', 'Public Speaking', 'MGT001'))
         db.session.add(LearningJourney(130001, 'Data Analyst', 'Python', 'FIN001'))
@@ -497,46 +498,46 @@ class TestPositions(TestApp):
 
 
 
-    def test_update_position(self):
-        db.session.add(Positions('Human Resource'))
-        db.session.add(Positions('Analyst'))
-        db.session.add(Positions('Head of Security'))
-        db.session.commit()
+    # def test_update_position(self):
+    #     db.session.add(Positions('Human Resource'))
+    #     db.session.add(Positions('Analyst'))
+    #     db.session.add(Positions('Head of Security'))
+    #     db.session.commit()
 
-        request_body = {
-            'Position_Name': 'Senior Analyst'
-        }
+    #     request_body = {
+    #         'Position_Name': 'Senior Analyst'
+    #     }
 
-        response = self.client.put("/skill/update/Analyst",
-                                    data=json.dumps(request_body),
-                                    content_type='application/json')
-        #print(response.data)
-        self.assertEqual(response.data, jsonify(
-            {
-            "code": 200,
-            "data": 'Senior Analyst'
-            }
-        ).data)
-        response1 = self.client.get("/positions")
-        #print(response.data)
-        self.assertEqual(response1.data, jsonify(
-            {
-            "code": 200,
-            "data": {
-                "positions": [
-                {
-                    "Position_Name": "Human Resource"
-                },
-                {
-                    "Position_Name": "Senior Analyst"
-                },
-                {
-                    "Position_Name": "Head of Security"
-                }
-                ]
-            }
-            }
-        ).data)
+    #     response = self.client.put("/position/update/Analyst",
+    #                                 data=json.dumps(request_body),
+    #                                 content_type='application/json')
+    #     #print(response.data)
+    #     self.assertEqual(response.data, jsonify(
+    #         {
+    #         "code": 200,
+    #         "data": 'Senior Analyst'
+    #         }
+    #     ).data)
+    #     response1 = self.client.get("/positions")
+    #     #print(response.data)
+    #     self.assertEqual(response1.data, jsonify(
+    #         {
+    #         "code": 200,
+    #         "data": {
+    #             "positions": [
+    #             {
+    #                 "Position_Name": "Human Resource"
+    #             },
+    #             {
+    #                 "Position_Name": "Senior Analyst"
+    #             },
+    #             {
+    #                 "Position_Name": "Head of Security"
+    #             }
+    #             ]
+    #         }
+    #         }
+    #     ).data)
 
 from registration import Registration
 
@@ -600,19 +601,19 @@ class TestRole(TestApp):
                 "roles": [
                 {
                     'role_id': 1,
-                    'role_name': 'Admin',
+                    'role_name': 'Admin'
                 },
                 {
                     'role_id': 2,
-                    'role_name': 'User',
+                    'role_name': 'User'
                 },
                 {
                     'role_id': 3,
-                    'role_name': 'Manager',
+                    'role_name': 'Manager'
                 },
                 {
                     'role_id': 4,
-                    'role_name': 'Trainer',
+                    'role_name': 'Trainer'
                 }
                 ]
             }
@@ -868,14 +869,14 @@ class TestStaff(TestApp):
             {
             "code": 200,
             "data": {
-                "Skill_Rewarded": [
+                "staffs": [
                 {
                     'staff_id': 130001,
                     'staff_fname': 'John',
                     'staff_lname': 'Sim',
                     'dept': 'Chairman',
                     'email': 'john.sim@allinone.com.sg',
-                    'role': 1,
+                    'role': 1
                 },
                 {
                     'staff_id': 130002,
@@ -883,7 +884,7 @@ class TestStaff(TestApp):
                     'staff_lname': 'Sim',
                     'dept': 'CEO',
                     'email': 'jack.sim@allinone.com.sg',
-                    'role': 1,
+                    'role': 1
                 },
                 {
                     'staff_id': 140001,
@@ -891,7 +892,7 @@ class TestStaff(TestApp):
                     'staff_lname': 'Tan',
                     'dept': 'Sales',
                     'email': 'Derek.Tan@allinone.com.sg',
-                    'role': 3,
+                    'role': 3
                 }
                 ]
             }
@@ -910,14 +911,40 @@ class TestStaff(TestApp):
             {
             "code": 200,
             "data": {
-                "Skill_Rewarded": [
+                "staff": [
                 {
                     'staff_id': 130001,
                     'staff_fname': 'John',
                     'staff_lname': 'Sim',
                     'dept': 'Chairman',
                     'email': 'john.sim@allinone.com.sg',
-                    'role': 1,
+                    'role': 1
+                }
+                ]
+            }
+            }
+        ).data)
+
+    def test_staff_get_by_dept(self):
+        db.session.add(Staff(130001, 'John', 'Sim', 'Chairman', 'john.sim@allinone.com.sg', 1))
+        db.session.add(Staff(130002, 'Jack', 'Sim', 'CEO', 'jack.sim@allinone.com.sg', 1))
+        db.session.add(Staff(140001, 'Derek', 'Tan', 'Sales', 'Derek.Tan@allinone.com.sg', 3))
+        db.session.commit()
+
+        response = self.client.get("/staff_get_by_dept/Sales")
+
+        self.assertEqual(response.data, jsonify(
+            {
+            "code": 200,
+            "data": {
+                "staffs": [
+                {
+                    'staff_id': 140001,
+                    'staff_fname': 'Derek',
+                    'staff_lname': 'Tan',
+                    'dept': 'Sales',
+                    'email': 'Derek.Tan@allinone.com.sg',
+                    'role': 3
                 }
                 ]
             }

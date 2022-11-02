@@ -1,4 +1,4 @@
-from flask import jsonify
+from flask import request, jsonify
 from __main__ import app,db
 #from app import app,db
 
@@ -44,26 +44,13 @@ def skill_get_by_name(name):
                     "skills": [skill.json() for skill in skill_data]
                 }
             }
-        )
+        ), 200
     return jsonify (
         {
             "code": 404,
             "message": 'No skill named ' + str(name) 
         }
-    )
-
-@app.route("/skill/<Skill_ID>", methods=['GET'])
-def get_skill_by_id(Skill_ID):
-    skill_data = Skill.query.filter_by(Skill_ID=Skill_ID)
-    if skill_data:
-        return jsonify(
-            {
-                "code": 200,
-                "data": {
-                    "skill": [skill.json() for skill in skill_data]
-                }
-            }
-        )
+    ), 404
 
 @app.route("/skill/delete/<string:skill_name>", methods=["DELETE"]) #delete skill by name
 def skill_delete_by_name(skill_name):
@@ -79,28 +66,71 @@ def skill_delete_by_name(skill_name):
             }
         ), 404
     # if skill exists
-
-    # return "returning: " + skill_name
     try:
         # Skill.query.filter_by(Skill_Name = skill_name).delete()
         result = Skill.query.filter_by(Skill_Name = skill_name).first()
         db.session.delete(result)
         db.session.commit()
+        return('success')
+    except Exception as e: print(e)
+    return('error')
+    # except:    
+    #     return jsonify(
+    #             {
+    #                 "code": 500,
+    #                 "data": {
+    #                     "Skill_Name": skill_name
+    #                 },
+    #                 "message": "An error occurred while deleting the Skill."
+    #             }
+    #         ), 500
 
-    except:    
+    # return jsonify(
+    #     {
+    #         "code": 200,
+    #         "data": skill_name
+    #     }
+    # ), 200
+
+@app.route("/skill/create", methods=['POST']) #add new skill
+def create_new_skill():
+    data = request.get_json()
+    Skill_Name = data['Skill_Name']
+
+    # If skill name already exists
+    if (Skill.query.filter_by(Skill_Name=Skill_Name).first()):
         return jsonify(
-                {
-                    "code": 500,
-                    "data": {
-                        "Skill_Name": skill_name
-                    },
-                    "message": "An error occurred while deleting the Skill."
-                }
-            ), 500
+            {
+                "code": 400,
+                "data": {
+                    "Skill_Name": Skill_Name
+                },
+                "message": "Skill already exists."
+            }
+        ), 400
+
+    # Create skill record
+    skill = Skill(
+        Skill_Name=Skill_Name
+    )
+    # return Skill_Name
+    try:
+        db.session.add(skill)
+        db.session.commit()
+    except:
+        return jsonify(
+            {
+                "code": 500,
+                "data": {
+                    "Skill_Name": skill
+                },
+                "message": "An error occurred creating the Skill."
+            }
+        ), 500
 
     return jsonify(
         {
-            "code": 200,
-            "data": skill_name
+            "code": 201,
+            "data": skill.json()
         }
-    ), 200
+    ), 201

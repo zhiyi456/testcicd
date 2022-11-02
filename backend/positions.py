@@ -1,13 +1,20 @@
 from flask import request, jsonify
 from __main__ import app,db
+from invokes import invoke_http
 
 
 class Positions(db.Model):
     __tablename__ = 'Positions'
 
     Position_Name = db.Column(db.String(50), primary_key=True)
+    #skillset = db.relationship("Skill_Set", passive_deletes=True,cascade='all,delete')
+    #lj = db.relationship("LearningJourney", passive_deletes=True,cascade='all,delete')
 
+
+ 
     def __init__(self, Position_Name):
+        if not isinstance(Position_Name, str):
+            raise TypeError("Position_Name must be a string")
         self.Position_Name = Position_Name
 
     def json(self):
@@ -108,3 +115,38 @@ def create_new_position(new_position):
     ), 201
 
 
+@app.route("/position/update", methods=['POST'])
+def update_position_name():
+
+    #lj_result=invoke_http("http://127.0.0.1:5000/lj", method='POST', json=None)
+    
+    #print(skillset_result,'========================================================================================================================================================================================================================================================================================================================================================================================================================================================')
+    #print(lj_result,'========================================================================================================================================================================================================================================================================================================================================================================================================================================================')
+    data = request.get_json()
+    old_position_name=data['old_position_name']
+    new_position_name=data['new_position_name']
+   
+
+
+    print(new_position_name,old_position_name,'==========================================================================================================================================================================================================================================================================================================================================================================================')
+    
+    result=Positions.query.filter(Positions.Position_Name==old_position_name).update({'Position_Name': new_position_name})
+    #skillset_result = invoke_http("http://127.0.0.1:5000/skill_set/update_position", method='POST', json=data)
+    #lj_result=invoke_http("http://127.0.0.1:5000/lj", method='POST', json=None)
+
+    db.session.commit()
+    if 'a':
+        return jsonify(
+            {
+                "code": 200,
+                "data": {
+                    "skill": 'slayed'
+                }
+            }
+        )
+    return jsonify(
+        {
+            "code": 404,
+            "message": "Skill ID is not found. Please double check."
+        }
+    ), 404

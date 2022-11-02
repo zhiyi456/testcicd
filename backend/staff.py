@@ -26,7 +26,7 @@ class Staff(db.Model):
             'staff_lname': self.staff_lname,
             'dept': self.dept,
             'email': self.email,
-            'role': self.role,
+            'role': self.role
         }
         return dto
 

@@ -14,7 +14,7 @@ class Role(db.Model):
     def json(self):
         dto = {
             'role_id': self.role_id,
-            'role_name': self.role_name,
+            'role_name': self.role_name
         }
 
         return dto
